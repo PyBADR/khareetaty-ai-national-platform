@@ -1,0 +1,232 @@
+# Golden Cases for FNOL Triage Module
+# Version: 1.0.0
+# Created: 2026-01-20
+# Owner: Platform Team
+#
+# These cases are IMMUTABLE - create new versions instead of modifying.
+
+- case_id: fnol_001
+  version: 1.0.0
+  module_name: fnol_triage
+  title: High-value auto claim requiring adjuster review
+  description: |
+    Tests handling of high-value auto claims that exceed the $50K threshold.
+    Should trigger human review due to monetary boundary violation.
+  category: normal
+  difficulty: medium
+  tags:
+    - auto
+    - high-value
+    - human-review
+    - boundary-violation
+  
+  input_data:
+    claim_id: CLM-2026-001
+    claim_type: auto
+    claim_amount: 75000.00
+    policy_number: POL-AUTO-12345
+    incident_date: "2026-01-15"
+    description: "Total loss - vehicle collision with multiple vehicles on highway"
+    claimant_name: "John Doe"
+    claimant_phone: "+1-415-555-0001"
+    location: "San Francisco, CA"
+    police_report: true
+    injuries_reported: false
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: true
+    min_confidence: 0.7
+    boundary_violations_allowed: 1
+    must_pass_boundaries: false
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 3
+  
+  status: active
+  created_at: "2026-01-20T10:00:00Z"
+  created_by: platform_team
+  notes: |
+    This is a baseline case for high-value claims.
+    Expected to trigger monetary boundary ($50K threshold).
+
+- case_id: fnol_002
+  version: 1.0.0
+  module_name: fnol_triage
+  title: Low-value property claim - automated processing
+  description: |
+    Tests handling of low-value property claims that can be processed automatically.
+    Should NOT require human review.
+  category: normal
+  difficulty: easy
+  tags:
+    - property
+    - low-value
+    - automated
+  
+  input_data:
+    claim_id: CLM-2026-002
+    claim_type: property
+    claim_amount: 2500.00
+    policy_number: POL-PROP-67890
+    incident_date: "2026-01-18"
+    description: "Water damage to kitchen from leaking pipe"
+    claimant_name: "Jane Smith"
+    claimant_phone: "+1-415-555-0002"
+    location: "Oakland, CA"
+    police_report: false
+    injuries_reported: false
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: false
+    min_confidence: 0.8
+    boundary_violations_allowed: 0
+    must_pass_boundaries: true
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 2
+  
+  status: active
+  created_at: "2026-01-20T10:00:00Z"
+  created_by: platform_team
+  notes: |
+    Baseline case for automated processing.
+    Should pass all boundaries and not require review.
+
+- case_id: fnol_003
+  version: 1.0.0
+  module_name: fnol_triage
+  title: Suspicious fraud indicators - immediate escalation
+  description: |
+    Tests detection of suspicious fraud indicators.
+    Should trigger immediate escalation to SIU.
+  category: adversarial
+  difficulty: hard
+  tags:
+    - fraud
+    - suspicious
+    - escalation
+    - edge-case
+  
+  input_data:
+    claim_id: CLM-2026-003
+    claim_type: auto
+    claim_amount: 45000.00
+    policy_number: POL-AUTO-99999
+    incident_date: "2026-01-19"
+    description: "Total loss fire damage suspicious circumstances arson accelerant detected"
+    claimant_name: "Bob Johnson"
+    claimant_phone: "+1-415-555-0003"
+    location: "Remote area, CA"
+    police_report: true
+    injuries_reported: false
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: true
+    min_confidence: 0.6
+    boundary_violations_allowed: 2
+    must_pass_boundaries: false
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 4
+    custom_assertions:
+      priority: HIGH
+      risk_category: RED
+  
+  status: active
+  created_at: "2026-01-20T10:00:00Z"
+  created_by: platform_team
+  notes: |
+    Edge case testing fraud detection.
+    Keywords: suspicious, arson, accelerant should trigger RED risk.
+
+- case_id: fnol_004
+  version: 1.0.0
+  module_name: fnol_triage
+  title: Injury claim with medical complexity
+  description: |
+    Tests handling of injury claims requiring medical review.
+    Should trigger human review due to injury complexity.
+  category: normal
+  difficulty: medium
+  tags:
+    - injury
+    - medical
+    - human-review
+  
+  input_data:
+    claim_id: CLM-2026-004
+    claim_type: auto
+    claim_amount: 35000.00
+    policy_number: POL-AUTO-55555
+    incident_date: "2026-01-17"
+    description: "Rear-end collision with whiplash and back injuries"
+    claimant_name: "Alice Williams"
+    claimant_phone: "+1-415-555-0004"
+    location: "San Jose, CA"
+    police_report: true
+    injuries_reported: true
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: true
+    min_confidence: 0.7
+    boundary_violations_allowed: 0
+    must_pass_boundaries: true
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 3
+  
+  status: active
+  created_at: "2026-01-20T10:00:00Z"
+  created_by: platform_team
+  notes: |
+    Injury claims should always require human review.
+    Even if within monetary boundaries.
+
+- case_id: fnol_005
+  version: 1.0.0
+  module_name: fnol_triage
+  title: Edge case - missing critical information
+  description: |
+    Tests handling of incomplete claims with missing critical data.
+    Should trigger human review due to insufficient information.
+  category: edge_case
+  difficulty: hard
+  tags:
+    - incomplete
+    - missing-data
+    - edge-case
+  
+  input_data:
+    claim_id: CLM-2026-005
+    claim_type: property
+    claim_amount: 15000.00
+    policy_number: POL-PROP-11111
+    incident_date: "2026-01-16"
+    description: "Damage occurred"
+    claimant_name: "Charlie Brown"
+    claimant_phone: "+1-415-555-0005"
+    location: "Unknown"
+    police_report: false
+    injuries_reported: false
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: true
+    min_confidence: 0.0
+    max_confidence: 0.6
+    boundary_violations_allowed: 1
+    must_pass_boundaries: false
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 1
+  
+  status: active
+  created_at: "2026-01-20T10:00:00Z"
+  created_by: platform_team
+  notes: |
+    Tests robustness with incomplete data.
+    Vague description should trigger low confidence and human review.

@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Capital",
+        "district_id": "D001",
+        "population": 450000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [47.95, 29.35],
+          [48.00, 29.35],
+          [48.00, 29.40],
+          [47.95, 29.40],
+          [47.95, 29.35]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hawalli",
+        "district_id": "D002",
+        "population": 380000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [48.00, 29.30],
+          [48.06, 29.30],
+          [48.06, 29.36],
+          [48.00, 29.36],
+          [48.00, 29.30]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Farwaniya",
+        "district_id": "D003",
+        "population": 320000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [47.93, 29.25],
+          [47.99, 29.25],
+          [47.99, 29.31],
+          [47.93, 29.31],
+          [47.93, 29.25]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ahmadi",
+        "district_id": "D004",
+        "population": 290000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [48.05, 29.05],
+          [48.12, 29.05],
+          [48.12, 29.11],
+          [48.05, 29.11],
+          [48.05, 29.05]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jahra",
+        "district_id": "D005",
+        "population": 260000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [47.63, 29.31],
+          [47.69, 29.31],
+          [47.69, 29.37],
+          [47.63, 29.37],
+          [47.63, 29.31]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mubarak Al-Kabeer",
+        "district_id": "D006",
+        "population": 240000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [48.03, 29.19],
+          [48.09, 29.19],
+          [48.09, 29.25],
+          [48.03, 29.25],
+          [48.03, 29.19]
+        ]]
+      }
+    }
+  ]
+}

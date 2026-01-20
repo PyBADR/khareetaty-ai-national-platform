@@ -1,0 +1,28 @@
+# Khareetaty-AI Streamlit-Only Requirements
+# File-Based Analytics | No Backend Required
+# Last Updated: 2026-01-17
+
+# Core Streamlit
+streamlit>=1.20.0
+
+# Data Processing
+pandas>=1.5.0
+numpy>=1.21.0
+
+# Visualization
+plotly>=5.10.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Geospatial
+geopy>=2.3.0
+shapely>=2.0.0
+geojson>=3.0.0
+rtree>=1.0.0
+
+# Machine Learning (for local analytics)
+scikit-learn>=1.1.0
+
+# Utilities
+pytz>=2022.0
+python-dotenv>=0.19.0
