@@ -33,8 +33,11 @@ struct ClaimDetailView: View {
                     TabButton(title: "Risk", icon: "exclamationmark.shield", isSelected: selectedTab == 4) {
                         selectedTab = 4
                     }
-                    TabButton(title: "Audit Log", icon: "clock.arrow.circlepath", isSelected: selectedTab == 5) {
+                    TabButton(title: "Report", icon: "doc.richtext", isSelected: selectedTab == 5) {
                         selectedTab = 5
+                    }
+                    TabButton(title: "Audit Log", icon: "clock.arrow.circlepath", isSelected: selectedTab == 6) {
+                        selectedTab = 6
                     }
                 }
                 .padding(.horizontal)
@@ -60,8 +63,11 @@ struct ClaimDetailView: View {
                 RiskAssessmentView(claim: currentClaim)
                     .tag(4)
                 
-                AuditLogTab(claimId: currentClaim.id)
+                ReportTab(claimId: currentClaim.id, claim: currentClaim)
                     .tag(5)
+                
+                AuditLogTab(claimId: currentClaim.id)
+                    .tag(6)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }

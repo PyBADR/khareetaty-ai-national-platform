@@ -127,7 +127,9 @@ extension Config {
     /// Prints current configuration (only in debug builds)
     static func printConfiguration() {
         #if DEBUG
-        print("""n        ╔══════════════════════════════════════════╗
+        print(
+        """
+        ╔══════════════════════════════════════════╗
         ║       DeevoSentinel Configuration        ║
         ╠══════════════════════════════════════════╣
         ║ Environment: \(environment.rawValue.padding(toLength: 25, withPad: " ", startingAt: 0)) ║

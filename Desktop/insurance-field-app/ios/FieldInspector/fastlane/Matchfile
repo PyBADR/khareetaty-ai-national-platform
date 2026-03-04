@@ -1,0 +1,27 @@
+# Fastlane Match Configuration
+# https://docs.fastlane.tools/actions/match/
+
+# Git repository to store certificates and profiles
+git_url(ENV['MATCH_GIT_URL'] || "git@github.com:yourcompany/certificates.git")
+
+# Storage mode: git, google_cloud, s3
+storage_mode("git")
+
+# Type of provisioning profile
+type("appstore")
+
+# App identifier
+app_identifier([ENV['APP_IDENTIFIER'] || "com.yourcompany.FieldInspector"])
+
+# Apple ID
+username(ENV['APPLE_ID'] || "your-apple-id@email.com")
+
+# Team ID
+team_id(ENV['TEAM_ID'] || "XXXXXXXXXX")
+
+# Clone using SSH (recommended)
+clone_branch_directly(true)
+shallow_clone(true)
+
+# For more information about Match, see:
+# https://docs.fastlane.tools/actions/match/

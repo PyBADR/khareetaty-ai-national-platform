@@ -1,0 +1,148 @@
+{
+  "id": "vehicle_inspection",
+  "name": "Vehicle Pre-Check Inspection",
+  "version": "1.0",
+  "category": "vehicle",
+  "description": "Standard vehicle inspection form for insurance claims",
+  "sections": [
+    {
+      "id": "vehicle_condition",
+      "title": "Vehicle Condition",
+      "icon": "car.fill",
+      "isCollapsible": false,
+      "isInitiallyExpanded": true,
+      "fields": [
+        {
+          "id": "vehicle_photo",
+          "type": "photo",
+          "label": "Picture of Vehicle",
+          "isRequired": true,
+          "config": {
+            "photoLabel": "Front View",
+            "allowCamera": true,
+            "allowGallery": false
+          }
+        },
+        {
+          "id": "overall_condition",
+          "type": "slider",
+          "label": "Overall Condition of Vehicle",
+          "isRequired": true,
+          "defaultValue": 50,
+          "config": {
+            "sliderMin": 0,
+            "sliderMax": 100,
+            "sliderStep": 1,
+            "sliderLabels": ["Poor", "Excellent"]
+          }
+        },
+        {
+          "id": "damage_photos",
+          "type": "photo_grid",
+          "label": "Areas of Concern on Vehicle",
+          "isRequired": false,
+          "config": {
+            "photoColumns": 4,
+            "allowCamera": true,
+            "allowGallery": true
+          },
+          "validation": {
+            "maxPhotos": 8
+          }
+        },
+        {
+          "id": "vehicle_location",
+          "type": "location",
+          "label": "Location of Vehicle",
+          "isRequired": true,
+          "config": {
+            "autoCapture": true,
+            "showMap": false
+          }
+        },
+        {
+          "id": "issue_count",
+          "type": "counter",
+          "label": "Number of Issues Found",
+          "isRequired": false,
+          "defaultValue": 0,
+          "config": {
+            "counterMin": 0,
+            "counterMax": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage_info",
+      "title": "Usage Information",
+      "icon": "gauge.high",
+      "isCollapsible": true,
+      "isInitiallyExpanded": true,
+      "fields": [
+        {
+          "id": "odometer_photo",
+          "type": "photo",
+          "label": "Photo of Odometer",
+          "isRequired": true,
+          "config": {
+            "photoLabel": "Odometer"
+          }
+        },
+        {
+          "id": "fuel_conditions",
+          "type": "select",
+          "label": "Fuel Level",
+          "isRequired": true,
+          "options": [
+            { "label": "Empty", "value": "empty" },
+            { "label": "1/4 Tank", "value": "quarter" },
+            { "label": "1/2 Tank", "value": "half" },
+            { "label": "3/4 Tank", "value": "three_quarter" },
+            { "label": "Full", "value": "full" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "driver_info",
+      "title": "Driver Information",
+      "icon": "person.fill",
+      "isCollapsible": true,
+      "isInitiallyExpanded": false,
+      "fields": [
+        {
+          "id": "driver_license_photo",
+          "type": "photo",
+          "label": "Driver License",
+          "isRequired": false,
+          "config": {
+            "photoLabel": "Driver License"
+          }
+        },
+        {
+          "id": "driver_name",
+          "type": "text",
+          "label": "Driver Name",
+          "placeholder": "Enter driver name...",
+          "isRequired": false
+        },
+        {
+          "id": "license_number",
+          "type": "text",
+          "label": "License Number",
+          "placeholder": "Enter license number...",
+          "isRequired": false
+        },
+        {
+          "id": "driver_phone",
+          "type": "phone",
+          "label": "Phone",
+          "placeholder": "Enter phone number...",
+          "isRequired": false
+        }
+      ]
+    }
+  ],
+  "submitButtonText": "Submit Inspection"
+}

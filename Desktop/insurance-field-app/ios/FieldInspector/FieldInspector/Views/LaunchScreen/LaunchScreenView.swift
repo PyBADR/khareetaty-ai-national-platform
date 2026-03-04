@@ -1,13 +1,14 @@
 import SwiftUI
 
-/// Branded launch screen for Deevo Sentinel
-/// Displays the app logo, name, and tagline with the Deevo design system
+/// Branded splash screen for DEEVO Field Inspector
+/// Displays for 1.8 seconds then fades to login
+/// No spinner per Apple HIG guidelines
 struct LaunchScreenView: View {
-    @State private var isAnimating = false
+    @State private var opacity = 0.0
     
     var body: some View {
         ZStack {
-            // Background gradient
+            // Background gradient - navy to darker navy
             LinearGradient(
                 colors: [
                     DeevoColors.backgroundDark,
@@ -18,28 +19,30 @@ struct LaunchScreenView: View {
             )
             .ignoresSafeArea()
             
-            VStack(spacing: 32) {
-                Spacer()
-                
-                // Logo container
+            VStack(spacing: 16) {
+                // DEEVO Shield Logo
                 ZStack {
-                    // Outer glow ring
+                    // Outer glow
                     Circle()
-                        .stroke(
-                            DeevoColors.accent.opacity(0.3),
-                            lineWidth: 2
-                        )
+                        .fill(DeevoColors.accent.opacity(0.15))
                         .frame(width: 160, height: 160)
-                        .scaleEffect(isAnimating ? 1.1 : 1.0)
-                        .opacity(isAnimating ? 0.5 : 1.0)
                     
-                    // Inner circle with icon
+                    // Inner circle
                     Circle()
-                        .fill(DeevoColors.primary)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    DeevoColors.primary,
+                                    DeevoColors.backgroundDark
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                         .frame(width: 140, height: 140)
-                        .shadow(color: DeevoColors.accent.opacity(0.4), radius: 20)
+                        .shadow(color: DeevoColors.accent.opacity(0.3), radius: 20)
                     
-                    // Shield icon representing security/protection
+                    // Shield icon
                     Image(systemName: "shield.checkered")
                         .font(.system(size: 64, weight: .medium))
                         .foregroundStyle(
@@ -51,56 +54,21 @@ struct LaunchScreenView: View {
                         )
                 }
                 
-                VStack(spacing: 12) {
-                    // App name
-                    Text("Deevo Sentinel")
-                        .font(.system(size: 42, weight: .bold, design: .default))
-                        .foregroundColor(DeevoColors.textPrimary)
-                        .tracking(1)
-                    
-                    // Tagline
-                    Text("Sovereign Claims Decision Infrastructure")
-                        .font(.system(size: 16, weight: .medium, design: .default))
-                        .foregroundColor(DeevoColors.accent)
-                        .tracking(2)
-                        .textCase(.uppercase)
-                }
+                // App name
+                Text("DEEVO Analytics")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundStyle(.white)
                 
-                Spacer()
-                
-                // Loading indicator
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: DeevoColors.accent))
-                        .scaleEffect(1.2)
-                    
-                    Text("Initializing secure environment...")
-                        .font(.system(size: 13, weight: .regular))
-                        .foregroundColor(DeevoColors.textSecondary)
-                }
-                
-                Spacer()
-                    .frame(height: 40)
-                
-                // Footer branding
-                VStack(spacing: 4) {
-                    Text("Powered by")
-                        .font(.system(size: 11, weight: .regular))
-                        .foregroundColor(DeevoColors.textTertiary)
-                    
-                    Text("Deevo Analytics")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(DeevoColors.textSecondary)
-                }
-                .padding(.bottom, 32)
+                // Subtitle
+                Text("Field Inspector")
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundStyle(DeevoColors.textSecondary)
             }
-        }
-        .onAppear {
-            withAnimation(
-                .easeInOut(duration: 1.5)
-                .repeatForever(autoreverses: true)
-            ) {
-                isAnimating = true
+            .opacity(opacity)
+            .onAppear {
+                withAnimation(.easeIn(duration: 0.4)) {
+                    opacity = 1.0
+                }
             }
         }
     }

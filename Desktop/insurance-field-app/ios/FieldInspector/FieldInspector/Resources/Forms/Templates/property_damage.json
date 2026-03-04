@@ -1,0 +1,230 @@
+{
+  "id": "property_damage",
+  "name": "Property Damage Assessment",
+  "version": "1.0",
+  "category": "property",
+  "description": "Property damage assessment form for insurance claims",
+  "sections": [
+    {
+      "id": "property_details",
+      "title": "Property Details",
+      "icon": "house.fill",
+      "isCollapsible": false,
+      "isInitiallyExpanded": true,
+      "fields": [
+        {
+          "id": "property_type",
+          "type": "select",
+          "label": "Property Type",
+          "isRequired": true,
+          "options": [
+            { "label": "Residential - Single Family", "value": "residential_single" },
+            { "label": "Residential - Multi Family", "value": "residential_multi" },
+            { "label": "Commercial", "value": "commercial" },
+            { "label": "Industrial", "value": "industrial" },
+            { "label": "Agricultural", "value": "agricultural" }
+          ]
+        },
+        {
+          "id": "property_address",
+          "type": "text",
+          "label": "Property Address",
+          "placeholder": "Enter full address...",
+          "isRequired": true
+        },
+        {
+          "id": "property_location",
+          "type": "location",
+          "label": "GPS Location",
+          "isRequired": true,
+          "config": {
+            "autoCapture": true,
+            "showMap": true
+          }
+        },
+        {
+          "id": "exterior_photos",
+          "type": "photo_grid",
+          "label": "Exterior Photos",
+          "helpText": "Take photos of all sides of the property",
+          "isRequired": true,
+          "config": {
+            "photoColumns": 4
+          },
+          "validation": {
+            "minPhotos": 2,
+            "maxPhotos": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "damage_assessment",
+      "title": "Damage Assessment",
+      "icon": "exclamationmark.triangle.fill",
+      "isCollapsible": true,
+      "isInitiallyExpanded": true,
+      "fields": [
+        {
+          "id": "damage_cause",
+          "type": "select",
+          "label": "Cause of Damage",
+          "isRequired": true,
+          "options": [
+            { "label": "Fire", "value": "fire" },
+            { "label": "Water/Flood", "value": "water" },
+            { "label": "Wind/Storm", "value": "wind" },
+            { "label": "Hail", "value": "hail" },
+            { "label": "Vandalism", "value": "vandalism" },
+            { "label": "Theft", "value": "theft" },
+            { "label": "Vehicle Impact", "value": "vehicle" },
+            { "label": "Other", "value": "other" }
+          ]
+        },
+        {
+          "id": "damage_severity",
+          "type": "rating",
+          "label": "Damage Severity",
+          "helpText": "1 = Minor, 5 = Total Loss",
+          "isRequired": true,
+          "config": {
+            "ratingMax": 5,
+            "ratingIcon": "star.fill"
+          }
+        },
+        {
+          "id": "damage_photos",
+          "type": "photo_grid",
+          "label": "Damage Photos",
+          "helpText": "Document all visible damage",
+          "isRequired": true,
+          "config": {
+            "photoColumns": 3
+          },
+          "validation": {
+            "minPhotos": 3,
+            "maxPhotos": 20
+          }
+        },
+        {
+          "id": "damage_description",
+          "type": "textarea",
+          "label": "Damage Description",
+          "placeholder": "Describe the damage in detail...",
+          "isRequired": true,
+          "validation": {
+            "minLength": 50,
+            "maxLength": 2000
+          }
+        },
+        {
+          "id": "estimated_repair_cost",
+          "type": "number",
+          "label": "Estimated Repair Cost ($)",
+          "placeholder": "0.00",
+          "isRequired": false,
+          "validation": {
+            "minValue": 0,
+            "maxValue": 10000000
+          }
+        }
+      ]
+    },
+    {
+      "id": "affected_areas",
+      "title": "Affected Areas",
+      "icon": "square.grid.2x2.fill",
+      "isCollapsible": true,
+      "isInitiallyExpanded": false,
+      "fields": [
+        {
+          "id": "roof_damage",
+          "type": "toggle",
+          "label": "Roof Damage",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "exterior_walls",
+          "type": "toggle",
+          "label": "Exterior Walls",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "windows_doors",
+          "type": "toggle",
+          "label": "Windows/Doors",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "interior_damage",
+          "type": "toggle",
+          "label": "Interior Damage",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "foundation",
+          "type": "toggle",
+          "label": "Foundation",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "electrical_systems",
+          "type": "toggle",
+          "label": "Electrical Systems",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "plumbing",
+          "type": "toggle",
+          "label": "Plumbing",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "hvac",
+          "type": "toggle",
+          "label": "HVAC System",
+          "isRequired": false,
+          "defaultValue": false
+        }
+      ]
+    },
+    {
+      "id": "inspector_notes",
+      "title": "Inspector Notes",
+      "icon": "note.text",
+      "isCollapsible": true,
+      "isInitiallyExpanded": false,
+      "fields": [
+        {
+          "id": "additional_notes",
+          "type": "textarea",
+          "label": "Additional Notes",
+          "placeholder": "Enter any additional observations...",
+          "isRequired": false
+        },
+        {
+          "id": "safety_concerns",
+          "type": "toggle",
+          "label": "Safety Concerns Present",
+          "isRequired": false,
+          "defaultValue": false
+        },
+        {
+          "id": "safety_notes",
+          "type": "textarea",
+          "label": "Safety Concern Details",
+          "placeholder": "Describe safety concerns...",
+          "isRequired": false
+        }
+      ]
+    }
+  ],
+  "submitButtonText": "Submit Assessment"
+}

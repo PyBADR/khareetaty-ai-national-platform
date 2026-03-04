@@ -6,7 +6,8 @@ import os.log
 // MARK: - Security Manager
 /// Handles encryption, PII masking, and privacy features for Deevo Sentinel
 
-final class SecurityManager {
+@MainActor
+final class SecurityManager: Sendable {
     static let shared = SecurityManager()
     
     private let logger = Logger(subsystem: "com.deevo.sentinel", category: "Security")
@@ -279,9 +280,10 @@ extension SecurityManager {
     }
     
     /// Generates SHA256 hash of string
-    func sha256(_ string: String) -> String {
+    nonisolated func sha256(_ string: String) -> String {
         guard let data = string.data(using: .utf8) else { return "" }
-        return sha256(data)
+        let hash = SHA256.hash(data: data)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
     
     /// Generates HMAC for data integrity verification
@@ -318,6 +320,8 @@ enum SecurityError: LocalizedError {
 
 extension String {
     func sha256() -> String {
-        SecurityManager.shared.sha256(self)
+        guard let data = self.data(using: .utf8) else { return "" }
+        let hash = SHA256.hash(data: data)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
 }

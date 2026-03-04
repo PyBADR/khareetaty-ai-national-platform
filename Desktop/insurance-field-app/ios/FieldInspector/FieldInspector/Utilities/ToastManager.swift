@@ -48,6 +48,7 @@ enum ToastType {
 }
 
 // MARK: - Toast Manager
+@MainActor
 class ToastManager: ObservableObject {
     static let shared = ToastManager()
     

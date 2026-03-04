@@ -2,7 +2,8 @@ import Foundation
 import GRDB
 
 /// Manages the SQLite database using GRDB
-final class DatabaseManager {
+@MainActor
+final class DatabaseManager: Sendable {
     
     // MARK: - Singleton
     
@@ -301,6 +302,64 @@ final class DatabaseManager {
                 t.column("retryCount", .integer).notNull().defaults(to: 0)
                 t.column("nextRetryAt", .datetime)
             }
+        }
+        
+        // Migration 4: Forms engine - templates, drafts, and queued operations
+        migrator.registerMigration("v4_forms_engine") { db in
+            // Form Templates table - stores JSON schema for dynamic forms
+            try db.create(table: "form_templates") { t in
+                t.column("id", .text).primaryKey()
+                t.column("name", .text).notNull()
+                t.column("version", .text).notNull().defaults(to: "1.0")
+                t.column("category", .text).notNull()
+                t.column("schemaJson", .text).notNull()
+                t.column("isActive", .boolean).notNull().defaults(to: true)
+                t.column("createdAt", .datetime).notNull()
+                t.column("updatedAt", .datetime).notNull()
+            }
+            
+            try db.create(index: "form_templates_category", on: "form_templates", columns: ["category"])
+            try db.create(index: "form_templates_isActive", on: "form_templates", columns: ["isActive"])
+            
+            // Form Drafts table - stores in-progress form data with autosave
+            try db.create(table: "form_drafts") { t in
+                t.column("id", .text).primaryKey()
+                t.column("templateId", .text).notNull().references("form_templates", onDelete: .cascade)
+                t.column("claimId", .text).references("claims", onDelete: .cascade)
+                t.column("inspectionId", .text).references("inspections", onDelete: .cascade)
+                t.column("dataJson", .text).notNull().defaults(to: "{}")
+                t.column("status", .text).notNull().defaults(to: "draft")
+                t.column("lastSavedAt", .datetime).notNull()
+                t.column("createdAt", .datetime).notNull()
+                t.column("updatedAt", .datetime).notNull()
+                t.column("syncStatus", .text).notNull().defaults(to: "pending")
+            }
+            
+            try db.create(index: "form_drafts_templateId", on: "form_drafts", columns: ["templateId"])
+            try db.create(index: "form_drafts_claimId", on: "form_drafts", columns: ["claimId"])
+            try db.create(index: "form_drafts_status", on: "form_drafts", columns: ["status"])
+            try db.create(index: "form_drafts_syncStatus", on: "form_drafts", columns: ["syncStatus"])
+            
+            // Queued Operations table - offline-first operation queue
+            try db.create(table: "queued_operations") { t in
+                t.column("id", .text).primaryKey()
+                t.column("operationType", .text).notNull()
+                t.column("entityType", .text).notNull()
+                t.column("entityId", .text).notNull()
+                t.column("payloadJson", .text).notNull()
+                t.column("idempotencyKey", .text).notNull().unique()
+                t.column("status", .text).notNull().defaults(to: "pending")
+                t.column("attempts", .integer).notNull().defaults(to: 0)
+                t.column("maxAttempts", .integer).notNull().defaults(to: 5)
+                t.column("lastError", .text)
+                t.column("nextRetryAt", .datetime)
+                t.column("createdAt", .datetime).notNull()
+                t.column("processedAt", .datetime)
+            }
+            
+            try db.create(index: "queued_operations_status", on: "queued_operations", columns: ["status"])
+            try db.create(index: "queued_operations_nextRetryAt", on: "queued_operations", columns: ["nextRetryAt"])
+            try db.create(index: "queued_operations_entityId", on: "queued_operations", columns: ["entityType", "entityId"])
         }
         
         try migrator.migrate(database)

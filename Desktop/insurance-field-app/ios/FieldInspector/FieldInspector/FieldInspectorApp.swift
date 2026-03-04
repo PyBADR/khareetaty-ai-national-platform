@@ -6,15 +6,24 @@ struct DeevoSentinelApp: App {
     @StateObject private var appState = AppState()
     
     init() {
+        // Validate configuration at launch
+        Config.validate()
+        
+        // Print configuration in debug builds
+        Config.printConfiguration()
+        
         // Initialize database
         do {
             try DatabaseManager.shared.setup()
         } catch {
+            AppLogger.critical("Failed to initialize database: \(error)")
             fatalError("Failed to initialize database: \(error)")
         }
         
         // Configure app appearance with Deevo theme
         configureAppearance()
+        
+        AppLogger.info("App initialized successfully", category: AppLogger.app)
     }
     
     var body: some Scene {

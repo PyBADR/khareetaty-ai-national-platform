@@ -40,7 +40,8 @@ actor APIService {
         self.encoder = JSONEncoder()
         self.encoder.dateEncodingStrategy = .iso8601
         
-        AppLogger.api.info("APIService initialized with base URL: \(self.baseURL.absoluteString, privacy: .public)")
+        let urlString = self.baseURL.absoluteString
+        AppLogger.api.info("APIService initialized with base URL: \(urlString, privacy: .public)")
     }
     
     // MARK: - Configuration
@@ -625,14 +626,14 @@ struct SyncPullRequest: Encodable {
     let entityTypes: [String]?
 }
 
-struct SyncPullResponse: Decodable {
+struct SyncPullResponse: Decodable, Sendable {
     let success: Bool
     let items: [SyncPullItem]
     let serverTimestamp: String
     let hasMore: Bool
 }
 
-struct SyncPullItem: Decodable {
+struct SyncPullItem: Decodable, Sendable {
     let entityType: String
     let entityId: String
     let operation: String
@@ -641,38 +642,54 @@ struct SyncPullItem: Decodable {
 }
 
 // Helper for decoding arbitrary JSON
-struct AnyCodable: Codable {
-    let value: Any
+struct AnyCodable: Codable, Sendable {
+    let value: SendableValue
+    
+    enum SendableValue: Sendable {
+        case string(String)
+        case int(Int)
+        case double(Double)
+        case bool(Bool)
+        case null
+    }
     
     init(_ value: Any) {
-        self.value = value
+        if let string = value as? String {
+            self.value = .string(string)
+        } else if let int = value as? Int {
+            self.value = .int(int)
+        } else if let double = value as? Double {
+            self.value = .double(double)
+        } else if let bool = value as? Bool {
+            self.value = .bool(bool)
+        } else {
+            self.value = .null
+        }
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let string = try? container.decode(String.self) {
-            value = string
+            value = .string(string)
         } else if let int = try? container.decode(Int.self) {
-            value = int
+            value = .int(int)
         } else if let double = try? container.decode(Double.self) {
-            value = double
+            value = .double(double)
         } else if let bool = try? container.decode(Bool.self) {
-            value = bool
+            value = .bool(bool)
         } else {
-            value = ""
+            value = .null
         }
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        if let string = value as? String {
-            try container.encode(string)
-        } else if let int = value as? Int {
-            try container.encode(int)
-        } else if let double = value as? Double {
-            try container.encode(double)
-        } else if let bool = value as? Bool {
-            try container.encode(bool)
+        switch value {
+        case .string(let s): try container.encode(s)
+        case .int(let i): try container.encode(i)
+        case .double(let d): try container.encode(d)
+        case .bool(let b): try container.encode(b)
+        case .null: try container.encodeNil()
         }
     }
 }

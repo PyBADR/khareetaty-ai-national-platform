@@ -148,6 +148,7 @@ extension ClaimSyncStatus: FetchableRecord, PersistableRecord {
 }
 
 /// Service for managing offline-first sync with exponential backoff and conflict resolution
+@MainActor
 final class SyncService: ObservableObject {
     
     // MARK: - Singleton
@@ -204,16 +205,15 @@ final class SyncService: ObservableObject {
     
     private func setupNetworkMonitoring() {
         monitor.pathUpdateHandler = { [weak self] path in
-            DispatchQueue.main.async {
-                let wasOffline = !(self?.isOnline ?? true)
-                self?.isOnline = path.status == .satisfied
+            Task { @MainActor in
+                guard let self = self else { return }
+                let wasOffline = !self.isOnline
+                self.isOnline = path.status == .satisfied
                 
                 // Auto-sync when coming online
                 if path.status == .satisfied && wasOffline {
-                    self?.globalRetryCount = 0  // Reset retry count
-                    Task {
-                        await self?.syncIfNeeded()
-                    }
+                    self.globalRetryCount = 0  // Reset retry count
+                    await self.syncIfNeeded()
                 }
             }
         }

@@ -6,10 +6,6 @@
 	<string>$(API_BASE_URL)</string>
 	<key>API_TIMEOUT_SECONDS</key>
 	<string>$(API_TIMEOUT_SECONDS)</string>
-	<key>ENABLE_DEBUG_LOGGING</key>
-	<string>$(ENABLE_DEBUG_LOGGING)</string>
-	<key>ENABLE_MOCK_DATA</key>
-	<string>$(ENABLE_MOCK_DATA)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -28,16 +24,22 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ENABLE_DEBUG_LOGGING</key>
+	<string>$(ENABLE_DEBUG_LOGGING)</string>
+	<key>ENABLE_MOCK_DATA</key>
+	<string>$(ENABLE_MOCK_DATA)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to capture inspection photos</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Required to record voice notes for inspection audit trail</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs to save inspection photos to your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs photo library access to save and retrieve inspection photos</string>
-	<key>UILaunchScreen</key>
-	<dict/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

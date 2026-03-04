@@ -62,6 +62,18 @@ struct HomeView: View {
                 }
                 .listRowBackground(selectedTab == 7 ? Color.accentColor.opacity(0.2) : Color.clear)
                 
+                // Sync Center
+                Button(action: { selectedTab = 8 }) {
+                    Label("Sync Center", systemImage: "arrow.triangle.2.circlepath")
+                }
+                .listRowBackground(selectedTab == 8 ? Color.accentColor.opacity(0.2) : Color.clear)
+                
+                // Dispatch Map
+                Button(action: { selectedTab = 9 }) {
+                    Label("Dispatch Map", systemImage: "map")
+                }
+                .listRowBackground(selectedTab == 9 ? Color.accentColor.opacity(0.2) : Color.clear)
+                
                 // Settings
                 Button(action: { selectedTab = 5 }) {
                     Label("Settings", systemImage: "gear")
@@ -123,6 +135,10 @@ struct HomeView: View {
                 ExecutiveDashboardView()
             case 7:
                 RegulatoryExportView()
+            case 8:
+                SyncStatusScreen()
+            case 9:
+                DispatchMapView()
             default:
                 ClaimInboxView(showAssignedOnly: false)
             }

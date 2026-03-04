@@ -1,0 +1,204 @@
+# Fastlane configuration for Field Inspector iOS app
+# https://docs.fastlane.tools
+
+default_platform(:ios)
+
+platform :ios do
+  
+  # ==========================================
+  # BEFORE ALL
+  # ==========================================
+  
+  before_all do
+    # Ensure we're on a clean state
+    ensure_git_status_clean unless ENV['SKIP_GIT_CHECK']
+  end
+
+  # ==========================================
+  # LANES
+  # ==========================================
+
+  desc "Run tests"
+  lane :test do
+    run_tests(
+      workspace: "FieldInspector.xcworkspace",
+      scheme: "FieldInspector",
+      devices: ["iPhone 15"],
+      clean: true
+    )
+  end
+
+  desc "Build the app for development"
+  lane :build_dev do
+    build_app(
+      workspace: "FieldInspector.xcworkspace",
+      scheme: "FieldInspector",
+      configuration: "Debug",
+      export_method: "development",
+      output_directory: "./build",
+      output_name: "FieldInspector-Dev.ipa"
+    )
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    # Increment build number
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1
+    )
+    
+    # Build the app
+    build_app(
+      workspace: "FieldInspector.xcworkspace",
+      scheme: "FieldInspector",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "FieldInspector.ipa"
+    )
+    
+    # Upload to TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      apple_id: ENV['APPLE_ID'],
+      app_identifier: ENV['APP_IDENTIFIER'],
+      changelog: "Bug fixes and improvements"
+    )
+    
+    # Commit version bump
+    commit_version_bump(
+      message: "Bump build number to #{lane_context[SharedValues::BUILD_NUMBER]} [skip ci]",
+      xcodeproj: "FieldInspector.xcodeproj"
+    )
+    
+    # Tag the release
+    add_git_tag(
+      tag: "beta/#{lane_context[SharedValues::VERSION_NUMBER]}/#{lane_context[SharedValues::BUILD_NUMBER]}"
+    )
+    
+    push_to_git_remote
+  end
+
+  desc "Build and submit to App Store for review"
+  lane :release do
+    # Ensure we're on main branch
+    ensure_git_branch(branch: 'main')
+    
+    # Run tests first
+    test
+    
+    # Increment version number (patch)
+    increment_version_number(
+      bump_type: "patch"
+    )
+    
+    # Reset build number for new version
+    increment_build_number(
+      build_number: 1
+    )
+    
+    # Build the app
+    build_app(
+      workspace: "FieldInspector.xcworkspace",
+      scheme: "FieldInspector",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "FieldInspector.ipa"
+    )
+    
+    # Upload to App Store Connect
+    upload_to_app_store(
+      app_identifier: ENV['APP_IDENTIFIER'],
+      skip_screenshots: true,
+      skip_metadata: false,
+      submit_for_review: false,  # Set to true for auto-submit
+      automatic_release: false,
+      force: true
+    )
+    
+    # Commit and tag
+    commit_version_bump(
+      message: "Release #{lane_context[SharedValues::VERSION_NUMBER]} [skip ci]",
+      xcodeproj: "FieldInspector.xcodeproj"
+    )
+    
+    add_git_tag(
+      tag: "release/#{lane_context[SharedValues::VERSION_NUMBER]}"
+    )
+    
+    push_to_git_remote
+  end
+
+  desc "Sync certificates and provisioning profiles"
+  lane :sync_certs do
+    match(
+      type: "appstore",
+      app_identifier: ENV['APP_IDENTIFIER'],
+      readonly: true
+    )
+    match(
+      type: "development",
+      app_identifier: ENV['APP_IDENTIFIER'],
+      readonly: true
+    )
+  end
+
+  desc "Register new devices"
+  lane :register_device do |options|
+    device_name = options[:name]
+    device_udid = options[:udid]
+    
+    register_devices(
+      devices: {
+        device_name => device_udid
+      }
+    )
+    
+    # Regenerate provisioning profiles
+    match(
+      type: "development",
+      app_identifier: ENV['APP_IDENTIFIER'],
+      force_for_new_devices: true
+    )
+  end
+
+  desc "Take screenshots for App Store"
+  lane :screenshots do
+    capture_screenshots(
+      workspace: "FieldInspector.xcworkspace",
+      scheme: "FieldInspectorUITests",
+      devices: [
+        "iPhone 15 Pro Max",
+        "iPhone 15 Pro",
+        "iPhone SE (3rd generation)",
+        "iPad Pro (12.9-inch) (6th generation)"
+      ],
+      languages: ["en-US"],
+      output_directory: "./screenshots",
+      clear_previous_screenshots: true
+    )
+  end
+
+  # ==========================================
+  # AFTER ALL
+  # ==========================================
+
+  after_all do |lane|
+    # Slack notification on success (optional)
+    # slack(
+    #   message: "Successfully deployed new build!",
+    #   slack_url: ENV['SLACK_WEBHOOK_URL']
+    # )
+  end
+
+  error do |lane, exception|
+    # Slack notification on error (optional)
+    # slack(
+    #   message: "Error in lane #{lane}: #{exception.message}",
+    #   slack_url: ENV['SLACK_WEBHOOK_URL'],
+    #   success: false
+    # )
+  end
+
+end
