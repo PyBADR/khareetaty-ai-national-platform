@@ -1,0 +1,40 @@
+# DeevoSentinel Build Warnings - BEFORE Hardening
+# Date: March 4, 2026
+# Total: 19 warnings + 1 settings issue
+
+## Settings Issue (1)
+1. DeevoSentinel.xcodeproj: "Update to recommended settings" - Project needs migration to latest Xcode settings
+
+## PDFService.swift Warnings (7)
+2. PDFService.swift:120 - UIColor(cgColor:) ?? .black - Nil coalescing operator with non-optional UIColor
+3. PDFService.swift:128 - UIColor(cgColor:) ?? .orange - Nil coalescing operator with non-optional UIColor  
+4. PDFService.swift:136 - UIColor(cgColor:) ?? .blue - Nil coalescing operator with non-optional UIColor
+5. PDFService.swift:107 - String interpolation with optional value - "\(inspection.templateName)"
+6. PDFService.swift:172 - Variable 'totalPages' was never mutated; consider changing to 'let'
+7. PDFService.swift:48 - String interpolation with optional value - "\(claim.policyNumber)"
+8. PDFService.swift:66 - String interpolation with optional value - "\(claim.claimDescription)"
+
+## PerformanceManager.swift Warnings (1)
+9. PerformanceManager.swift:89 - Result of call to 'startMeasurement()' is unused
+
+## SyncService.swift Warnings (4)
+10. SyncService.swift:214 - Reference to captured var 'self' in concurrently-executing code
+11. SyncService.swift:282 - Reference to captured var 'isOnline' in concurrently-executing code
+12. SyncService.swift:390 - Mutation of captured var 'globalRetryCount' in concurrently-executing code
+13. SyncService.swift:395 - Reference to captured var 'isOnline' in concurrently-executing code
+
+## ClaimsViewModel.swift Warnings (2)
+14. ClaimsViewModel.swift:44 - Reference to captured var 'self' in concurrently-executing code
+15. ClaimsViewModel.swift:101 - Mutation of captured var 'claimToSave' in concurrently-executing code
+
+## EvidenceViewModel.swift Warnings (4)
+16. EvidenceViewModel.swift:78 - Reference to captured var 'asset' in concurrently-executing code
+17. EvidenceViewModel.swift:112 - Mutation of captured var 'assets' in concurrently-executing code
+18. EvidenceViewModel.swift:145 - Reference to captured var 'self' in concurrently-executing code
+19. EvidenceViewModel.swift:167 - Mutation of captured var 'selectedAsset' in concurrently-executing code
+
+## InspectionViewModel.swift Warnings (1)
+20. InspectionViewModel.swift:156 - Mutation of captured var 'inspectionToSave' in concurrently-executing code
+
+---
+Total: 20 issues (1 settings + 19 warnings)

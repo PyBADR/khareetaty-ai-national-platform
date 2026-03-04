@@ -1,0 +1,83 @@
+# Golden Cases for Fraud Detection Module
+# Version: 1.0.0
+# Created: 2026-01-20
+# Owner: Platform Team
+
+- case_id: fraud_001
+  version: 1.0.0
+  module_name: fraud_detection
+  title: Legitimate claim - no fraud indicators
+  description: |
+    Baseline legitimate claim with no fraud indicators.
+    Should result in LOW fraud risk.
+  category: normal
+  difficulty: easy
+  tags:
+    - legitimate
+    - low-risk
+    - baseline
+  
+  input_data:
+    claim_id: CLM-FRAUD-001
+    claim_amount: 5000.00
+    policy_age_days: 730
+    claim_count_last_year: 0
+    claim_description: "Minor fender bender in parking lot"
+    police_report_filed: true
+    witness_present: true
+    claimant_history_clean: true
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: false
+    min_confidence: 0.8
+    boundary_violations_allowed: 0
+    must_pass_boundaries: true
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 2
+    custom_assertions:
+      risk_level: LOW
+  
+  status: active
+  created_at: "2026-01-20T11:00:00Z"
+  created_by: platform_team
+
+- case_id: fraud_002
+  version: 1.0.0
+  module_name: fraud_detection
+  title: High fraud score - multiple red flags
+  description: |
+    Claim with multiple fraud indicators requiring SIU investigation.
+  category: adversarial
+  difficulty: hard
+  tags:
+    - fraud
+    - high-risk
+    - investigation
+  
+  input_data:
+    claim_id: CLM-FRAUD-002
+    claim_amount: 95000.00
+    policy_age_days: 15
+    claim_count_last_year: 3
+    claim_description: "Total loss suspicious fire"
+    police_report_filed: false
+    witness_present: false
+    claimant_history_clean: false
+  
+  expected_outcome:
+    decision_type: BOUNDED
+    requires_human_review: true
+    min_confidence: 0.7
+    boundary_violations_allowed: 2
+    must_pass_boundaries: false
+    must_have_position: true
+    must_have_explainability: true
+    min_explainability_factors: 4
+    custom_assertions:
+      risk_level: CRITICAL
+  
+  status: active
+  created_at: "2026-01-20T11:00:00Z"
+  created_by: platform_team

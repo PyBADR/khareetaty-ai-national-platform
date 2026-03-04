@@ -1,0 +1,31 @@
+incident_id,timestamp,latitude,longitude,severity,category,description,status
+INC001,2026-01-15 08:30:00,29.3759,47.9774,High,Traffic,Major accident on Gulf Road,Active
+INC002,2026-01-15 09:15:00,29.3117,47.4818,Medium,Infrastructure,Water pipe burst in Jahra,Resolved
+INC003,2026-01-15 10:00:00,29.3697,47.9783,Low,Public Safety,Minor disturbance reported,Active
+INC004,2026-01-15 11:30:00,29.2694,48.0059,High,Emergency,Fire incident in Salmiya,Active
+INC005,2026-01-15 12:00:00,29.3375,47.6581,Medium,Traffic,Road closure for maintenance,Planned
+INC006,2026-01-15 13:45:00,29.3285,47.9216,Low,Public Safety,Noise complaint,Resolved
+INC007,2026-01-15 14:30:00,29.3520,47.9550,Medium,Infrastructure,Power outage in Sharq,Active
+INC008,2026-01-15 15:00:00,29.2975,48.1189,High,Emergency,Medical emergency in Hawally,Resolved
+INC009,2026-01-15 16:20:00,29.3333,47.6667,Low,Traffic,Minor traffic congestion,Active
+INC010,2026-01-15 17:00:00,29.3759,47.9900,Medium,Public Safety,Security alert,Active
+INC011,2026-01-14 08:00:00,29.3697,47.9783,High,Traffic,Highway accident,Resolved
+INC012,2026-01-14 10:30:00,29.3117,47.4818,Medium,Infrastructure,Gas leak reported,Resolved
+INC013,2026-01-14 12:00:00,29.2694,48.0059,Low,Public Safety,Suspicious activity,Resolved
+INC014,2026-01-14 14:30:00,29.3375,47.6581,High,Emergency,Building fire,Resolved
+INC015,2026-01-14 16:00:00,29.3285,47.9216,Medium,Traffic,Vehicle breakdown,Resolved
+INC016,2026-01-13 09:00:00,29.3520,47.9550,Low,Infrastructure,Street light malfunction,Resolved
+INC017,2026-01-13 11:00:00,29.2975,48.1189,High,Emergency,Cardiac arrest case,Resolved
+INC018,2026-01-13 13:00:00,29.3333,47.6667,Medium,Public Safety,Theft reported,Active
+INC019,2026-01-13 15:00:00,29.3759,47.9900,Low,Traffic,Parking violation,Resolved
+INC020,2026-01-13 17:00:00,29.3697,47.9783,High,Emergency,Chemical spill,Resolved
+INC021,2026-01-12 08:30:00,29.3117,47.4818,Medium,Infrastructure,Sewer blockage,Resolved
+INC022,2026-01-12 10:00:00,29.2694,48.0059,Low,Public Safety,Lost child found,Resolved
+INC023,2026-01-12 12:30:00,29.3375,47.6581,High,Traffic,Multi-vehicle collision,Resolved
+INC024,2026-01-12 14:00:00,29.3285,47.9216,Medium,Emergency,Gas station incident,Resolved
+INC025,2026-01-12 16:30:00,29.3520,47.9550,Low,Infrastructure,Pothole repair needed,Active
+INC026,2026-01-11 09:00:00,29.2975,48.1189,High,Emergency,Explosion reported,Resolved
+INC027,2026-01-11 11:30:00,29.3333,47.6667,Medium,Public Safety,Vandalism incident,Resolved
+INC028,2026-01-11 13:00:00,29.3759,47.9900,Low,Traffic,Traffic light malfunction,Resolved
+INC029,2026-01-11 15:30:00,29.3697,47.9783,High,Emergency,Hazmat situation,Resolved
+INC030,2026-01-11 17:00:00,29.3117,47.4818,Medium,Infrastructure,Telecom outage,Resolved

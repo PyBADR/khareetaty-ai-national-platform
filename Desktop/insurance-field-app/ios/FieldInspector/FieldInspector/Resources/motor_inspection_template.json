@@ -1,0 +1,148 @@
+{
+  "id": "motor-inspection-v1",
+  "name": "Motor Vehicle Inspection",
+  "description": "Standard inspection template for motor vehicle claims",
+  "version": "1.0",
+  "claimType": "motor",
+  "isActive": true,
+  "sections": [
+    {
+      "key": "vehicle_info",
+      "title": "Vehicle Information",
+      "description": "Verify and record vehicle details",
+      "order": 1,
+      "fields": [
+        {
+          "key": "vin_verified",
+          "label": "VIN Verified",
+          "type": "toggle",
+          "required": true,
+          "order": 1
+        },
+        {
+          "key": "odometer_reading",
+          "label": "Odometer Reading",
+          "type": "number",
+          "required": true,
+          "order": 2,
+          "placeholder": "Enter current mileage"
+        },
+        {
+          "key": "vehicle_condition",
+          "label": "Overall Vehicle Condition",
+          "type": "dropdown",
+          "required": true,
+          "order": 3,
+          "options": ["Excellent", "Good", "Fair", "Poor"]
+        }
+      ]
+    },
+    {
+      "key": "damage_areas",
+      "title": "Damage Assessment",
+      "description": "Document all damage areas",
+      "order": 2,
+      "fields": [
+        {
+          "key": "front_bumper_damage",
+          "label": "Front Bumper Damage",
+          "type": "dropdown",
+          "required": true,
+          "order": 1,
+          "options": ["None", "Minor Scratches", "Dents", "Cracked", "Severe"]
+        },
+        {
+          "key": "rear_bumper_damage",
+          "label": "Rear Bumper Damage",
+          "type": "dropdown",
+          "required": true,
+          "order": 2,
+          "options": ["None", "Minor Scratches", "Dents", "Cracked", "Severe"]
+        },
+        {
+          "key": "damage_description",
+          "label": "Detailed Damage Description",
+          "type": "text",
+          "required": true,
+          "order": 3,
+          "placeholder": "Describe all visible damage in detail...",
+          "multiline": true
+        }
+      ]
+    },
+    {
+      "key": "photos_checklist",
+      "title": "Photo Documentation",
+      "description": "Required photos for the inspection",
+      "order": 3,
+      "fields": [
+        {
+          "key": "photo_front",
+          "label": "Front View Photo",
+          "type": "photo",
+          "required": true,
+          "order": 1
+        },
+        {
+          "key": "photo_rear",
+          "label": "Rear View Photo",
+          "type": "photo",
+          "required": true,
+          "order": 2
+        },
+        {
+          "key": "photo_damage",
+          "label": "Primary Damage Photo",
+          "type": "photo",
+          "required": true,
+          "order": 3
+        }
+      ]
+    },
+    {
+      "key": "approval",
+      "title": "Approval & Signature",
+      "description": "Final approval and signature",
+      "order": 4,
+      "fields": [
+        {
+          "key": "inspection_complete",
+          "label": "Inspection Complete",
+          "type": "toggle",
+          "required": true,
+          "order": 1
+        },
+        {
+          "key": "estimated_repair_cost",
+          "label": "Estimated Repair Cost",
+          "type": "number",
+          "required": true,
+          "order": 2,
+          "placeholder": "Enter estimated cost in USD"
+        },
+        {
+          "key": "recommendation",
+          "label": "Recommendation",
+          "type": "dropdown",
+          "required": true,
+          "order": 3,
+          "options": ["Approve Repair", "Total Loss", "Further Investigation", "Deny Claim"]
+        },
+        {
+          "key": "inspection_date",
+          "label": "Inspection Date",
+          "type": "date",
+          "required": true,
+          "order": 4
+        },
+        {
+          "key": "inspector_signature",
+          "label": "Inspector Signature",
+          "type": "signature",
+          "required": true,
+          "order": 5
+        }
+      ]
+    }
+  ]
+}

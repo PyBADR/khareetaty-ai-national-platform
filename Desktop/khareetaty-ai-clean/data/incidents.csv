@@ -1,0 +1,31 @@
+incident_id,timestamp,district,police_zone,lat,lon,severity,category
+INC001,2026-01-15T08:30:00,Capital,Zone-A,29.3759,47.9774,High,Theft
+INC002,2026-01-15T09:15:00,Hawalli,Zone-B,29.3326,48.0281,Medium,Traffic
+INC003,2026-01-15T10:45:00,Farwaniya,Zone-C,29.2775,47.9589,Low,Vandalism
+INC004,2026-01-15T11:20:00,Ahmadi,Zone-D,29.0769,48.0838,High,Burglary
+INC005,2026-01-15T12:00:00,Jahra,Zone-E,29.3375,47.6581,Medium,Assault
+INC006,2026-01-15T13:30:00,Mubarak Al-Kabeer,Zone-F,29.2120,48.0606,High,Robbery
+INC007,2026-01-15T14:15:00,Capital,Zone-A,29.3680,47.9650,Medium,Fraud
+INC008,2026-01-15T15:00:00,Hawalli,Zone-B,29.3420,48.0350,Low,Disturbance
+INC009,2026-01-15T16:30:00,Farwaniya,Zone-C,29.2850,47.9700,High,Drug-related
+INC010,2026-01-15T17:45:00,Ahmadi,Zone-D,29.0850,48.0950,Medium,Theft
+INC011,2026-01-16T08:00:00,Capital,Zone-A,29.3800,47.9800,High,Burglary
+INC012,2026-01-16T09:30:00,Jahra,Zone-E,29.3450,47.6700,Low,Traffic
+INC013,2026-01-16T10:15:00,Mubarak Al-Kabeer,Zone-F,29.2200,48.0700,Medium,Vandalism
+INC014,2026-01-16T11:45:00,Hawalli,Zone-B,29.3380,48.0320,High,Assault
+INC015,2026-01-16T12:30:00,Farwaniya,Zone-C,29.2800,47.9650,Medium,Theft
+INC016,2026-01-16T13:00:00,Capital,Zone-A,29.3720,47.9720,Low,Disturbance
+INC017,2026-01-16T14:30:00,Ahmadi,Zone-D,29.0800,48.0900,High,Robbery
+INC018,2026-01-16T15:15:00,Jahra,Zone-E,29.3400,47.6650,Medium,Fraud
+INC019,2026-01-16T16:00:00,Mubarak Al-Kabeer,Zone-F,29.2150,48.0650,High,Drug-related
+INC020,2026-01-16T17:30:00,Hawalli,Zone-B,29.3350,48.0300,Low,Traffic
+INC021,2026-01-17T07:30:00,Capital,Zone-A,29.3750,47.9760,High,Burglary
+INC022,2026-01-17T08:45:00,Farwaniya,Zone-C,29.2820,47.9680,Medium,Theft
+INC023,2026-01-17T09:30:00,Ahmadi,Zone-D,29.0820,48.0880,High,Assault
+INC024,2026-01-17T10:15:00,Jahra,Zone-E,29.3420,47.6620,Low,Vandalism
+INC025,2026-01-17T11:00:00,Mubarak Al-Kabeer,Zone-F,29.2180,48.0680,Medium,Disturbance
+INC026,2026-01-17T12:30:00,Hawalli,Zone-B,29.3400,48.0330,High,Robbery
+INC027,2026-01-17T13:15:00,Capital,Zone-A,29.3780,47.9790,Medium,Fraud
+INC028,2026-01-17T14:00:00,Farwaniya,Zone-C,29.2790,47.9620,Low,Traffic
+INC029,2026-01-17T15:30:00,Ahmadi,Zone-D,29.0780,48.0860,High,Drug-related
+INC030,2026-01-17T16:45:00,Jahra,Zone-E,29.3380,47.6680,Medium,Theft

@@ -1,0 +1,23 @@
+//
+// Debug.xcconfig
+// DeevoSentinel
+//
+// Debug configuration for development builds
+//
+
+// MARK: - API Configuration
+API_BASE_URL = http:/$()/127.0.0.1:3000/api
+API_TIMEOUT_SECONDS = 30
+
+// MARK: - Feature Flags
+ENABLE_DEBUG_LOGGING = YES
+ENABLE_MOCK_DATA = NO
+
+// MARK: - Build Settings
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DEBUG
+OTHER_SWIFT_FLAGS = $(inherited) -DDEBUG
+
+// MARK: - Code Signing (Development)
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM = 

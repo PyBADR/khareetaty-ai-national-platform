@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_name": "Zone-A",
+        "district": "Capital",
+        "zone_id": "Z001"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [47.95, 29.35],
+          [48.00, 29.35],
+          [48.00, 29.40],
+          [47.95, 29.40],
+          [47.95, 29.35]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_name": "Zone-B",
+        "district": "Hawalli",
+        "zone_id": "Z002"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [48.00, 29.30],
+          [48.06, 29.30],
+          [48.06, 29.36],
+          [48.00, 29.36],
+          [48.00, 29.30]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_name": "Zone-C",
+        "district": "Farwaniya",
+        "zone_id": "Z003"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [47.93, 29.25],
+          [47.99, 29.25],
+          [47.99, 29.31],
+          [47.93, 29.31],
+          [47.93, 29.25]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_name": "Zone-D",
+        "district": "Ahmadi",
+        "zone_id": "Z004"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [48.05, 29.05],
+          [48.12, 29.05],
+          [48.12, 29.11],
+          [48.05, 29.11],
+          [48.05, 29.05]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_name": "Zone-E",
+        "district": "Jahra",
+        "zone_id": "Z005"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [47.63, 29.31],
+          [47.69, 29.31],
+          [47.69, 29.37],
+          [47.63, 29.37],
+          [47.63, 29.31]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_name": "Zone-F",
+        "district": "Mubarak Al-Kabeer",
+        "zone_id": "Z006"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [48.03, 29.19],
+          [48.09, 29.19],
+          [48.09, 29.25],
+          [48.03, 29.25],
+          [48.03, 29.19]
+        ]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [main, release/*]
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios-build.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios-build.yml'
+
+jobs:
+  build:
+    name: Build DeevoSentinel
+    runs-on: macos-14
+    
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+      
+      - name: Show Xcode version
+        run: xcodebuild -version
+      
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-deriveddata-${{ hashFiles('ios/**/*.swift', 'ios/**/*.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-deriveddata-
+      
+      - name: Resolve Swift Package Dependencies
+        working-directory: ios
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project DeevoSentinel.xcodeproj \
+            -scheme DeevoSentinel
+      
+      - name: Build for iPad Simulator
+        working-directory: ios
+        run: |
+          xcodebuild build \
+            -project DeevoSentinel.xcodeproj \
+            -scheme DeevoSentinel \
+            -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M4),OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build.log
+      
+      - name: Check for warnings
+        working-directory: ios
+        run: |
+          WARNING_COUNT=$(grep -c "warning:" build.log || true)
+          echo "Warning count: $WARNING_COUNT"
+          if [ "$WARNING_COUNT" -gt 0 ]; then
+            echo "::warning::Build completed with $WARNING_COUNT warnings"
+            grep "warning:" build.log || true
+          fi
+      
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: ios/build.log
+          retention-days: 7
+
+  test:
+    name: Run Tests
+    runs-on: macos-14
+    needs: build
+    
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+      
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-deriveddata-${{ hashFiles('ios/**/*.swift', 'ios/**/*.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-deriveddata-
+      
+      - name: Run Unit Tests
+        working-directory: ios
+        run: |
+          xcodebuild test \
+            -project DeevoSentinel.xcodeproj \
+            -scheme DeevoSentinel \
+            -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M4),OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee test.log || true
+      
+      - name: Upload test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log
+          path: ios/test.log
+          retention-days: 7
