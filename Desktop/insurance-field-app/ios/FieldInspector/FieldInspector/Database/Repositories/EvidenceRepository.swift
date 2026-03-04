@@ -75,8 +75,9 @@ final class EvidenceRepository {
         mutableAsset.updatedAt = Date()
         mutableAsset.syncStatus = .pending
         
+        let assetToInsert = mutableAsset
         try await database.database.write { db in
-            try mutableAsset.insert(db)
+            try assetToInsert.insert(db)
         }
     }
     
@@ -85,8 +86,9 @@ final class EvidenceRepository {
         var mutableAsset = asset
         mutableAsset.updatedAt = Date()
         
+        let assetToUpdate = mutableAsset
         try await database.database.write { db in
-            try mutableAsset.update(db)
+            try assetToUpdate.update(db)
         }
     }
     

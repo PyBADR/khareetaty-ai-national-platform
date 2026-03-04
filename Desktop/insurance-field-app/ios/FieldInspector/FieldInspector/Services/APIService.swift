@@ -431,7 +431,72 @@ actor APIService {
     func pullSync(request: SyncPullRequest) async throws -> SyncPullResponse {
         return try await self.request(endpoint: "sync/pull", method: "POST", body: request)
     }
+    
+    // MARK: - Queue Operation Endpoints (for OperationProcessor)
+    
+    /// Submit a form via the queue
+    func submitForm(payload: FormSubmissionPayload) async throws {
+        struct SubmitRequest: Encodable {
+            let templateId: String
+            let claimId: String?
+            let inspectionId: String?
+            let data: String
+        }
+        let _: EmptyResponse = try await request(
+            endpoint: "forms/submit",
+            method: "POST",
+            body: SubmitRequest(
+                templateId: payload.templateId,
+                claimId: payload.claimId,
+                inspectionId: payload.inspectionId,
+                data: payload.dataJson
+            )
+        )
+    }
+    
+    /// Upload evidence via the queue
+    func uploadEvidence(payload: EvidenceUploadPayload) async throws -> String {
+        let fileURL = URL(fileURLWithPath: payload.localPath)
+        let response = try await uploadMedia(fileURL: fileURL, claimId: payload.claimId)
+        return response.url
+    }
+    
+    /// Update a claim via the queue
+    func updateClaim(payload: ClaimUpdatePayload) async throws {
+        var updates = ClaimUpdate()
+        if let status = payload.updates["status"] {
+            updates.status = status
+        }
+        if let priority = payload.updates["priority"] {
+            updates.priority = priority
+        }
+        _ = try await updateClaim(id: payload.claimId, updates: updates)
+    }
+    
+    /// Create an inspection via the queue
+    func createInspection(payload: InspectionCreatePayload) async throws {
+        _ = try await createInspection(claimId: payload.claimId, templateId: payload.templateId)
+    }
+    
+    /// Update an inspection via the queue
+    func updateInspection(payload: InspectionUpdatePayload) async throws {
+        let fields = payload.fields.map { key, value in
+            FieldUpdate(sectionKey: "", fieldKey: key, value: value)
+        }
+        _ = try await updateInspectionFields(id: payload.inspectionId, fields: fields)
+    }
+    
+    /// Delete media via the queue
+    func deleteMedia(mediaAssetId: String) async throws {
+        let _: EmptyResponse = try await request(
+            endpoint: "media/\(mediaAssetId)",
+            method: "DELETE"
+        )
+    }
 }
+
+/// Empty response for endpoints that return no data
+struct EmptyResponse: Decodable {}
 
 // MARK: - API Error
 

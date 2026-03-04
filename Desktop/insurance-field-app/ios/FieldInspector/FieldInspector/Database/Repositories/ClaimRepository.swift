@@ -78,8 +78,9 @@ final class ClaimRepository {
         mutableClaim.updatedAt = Date()
         mutableClaim.syncStatus = .pending
         
+        let claimToInsert = mutableClaim
         try await database.database.write { db in
-            try mutableClaim.insert(db)
+            try claimToInsert.insert(db)
         }
     }
     
@@ -89,8 +90,9 @@ final class ClaimRepository {
         mutableClaim.updatedAt = Date()
         mutableClaim.syncStatus = .pending
         
+        let claimToUpdate = mutableClaim
         try await database.database.write { db in
-            try mutableClaim.update(db)
+            try claimToUpdate.update(db)
         }
     }
     

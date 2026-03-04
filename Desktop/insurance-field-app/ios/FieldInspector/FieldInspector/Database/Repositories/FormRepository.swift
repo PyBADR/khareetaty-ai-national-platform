@@ -143,8 +143,9 @@ final class FormRepository {
         var mutableTemplate = template
         mutableTemplate.updatedAt = Date()
         
+        let templateToSave = mutableTemplate
         try await database.database.write { db in
-            try mutableTemplate.save(db)
+            try templateToSave.save(db)
         }
     }
     

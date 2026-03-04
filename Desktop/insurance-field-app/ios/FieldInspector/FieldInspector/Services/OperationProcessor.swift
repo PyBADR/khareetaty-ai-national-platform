@@ -19,7 +19,7 @@ final class OperationProcessor: ObservableObject {
     
     private let operationRepository: OperationRepository
     private let api: APIService
-    private let backoffConfig: BackoffConfig
+    private let backoffConfig: OperationBackoffConfig
     private var processingTask: Task<Void, Never>?
     private let monitor: NWPathMonitor
     private let monitorQueue = DispatchQueue(label: "com.fieldinspector.operationprocessor.network")
@@ -30,7 +30,7 @@ final class OperationProcessor: ObservableObject {
     private init() {
         self.operationRepository = OperationRepository.shared
         self.api = APIService.shared
-        self.backoffConfig = .default
+        self.backoffConfig = OperationBackoffConfig.default
         self.monitor = NWPathMonitor()
         
         setupNetworkMonitoring()
@@ -353,4 +353,25 @@ struct InspectionUpdatePayload: Codable {
 
 struct MediaDeletePayload: Codable {
     let mediaAssetId: String
+}
+
+// MARK: - Backoff Configuration
+
+/// Configuration for exponential backoff retry strategy
+struct OperationBackoffConfig {
+    let initialDelay: TimeInterval
+    let maxDelay: TimeInterval
+    let multiplier: Double
+    
+    static let `default` = OperationBackoffConfig(
+        initialDelay: 1.0,      // 1 second
+        maxDelay: 300.0,        // 5 minutes
+        multiplier: 2.0         // Double each time
+    )
+    
+    /// Calculate delay for a given attempt number (0-indexed)
+    func delay(forAttempt attempt: Int) -> TimeInterval {
+        let delay = initialDelay * pow(multiplier, Double(attempt))
+        return min(delay, maxDelay)
+    }
 }
