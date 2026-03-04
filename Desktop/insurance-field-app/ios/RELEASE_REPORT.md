@@ -10,12 +10,14 @@
 ## Baseline (Before)
 - **Total Issues:** 20 (1 settings issue + 19 warnings)
 - **"Update to recommended settings":** 1
-- **PDFService warnings:** 7 (UIColor nil coalescing, optional interpolation, varlet)
+- **PDFService warnings:** 7 (UIColor nil coalescing, optional interpolation, var→let)
 - **PerformanceManager warnings:** 1 (unused result)
 - **SyncService warnings:** 4 (Swift concurrency - captured var in async context)
 - **ClaimsViewModel warnings:** 2 (Swift concurrency)
 - **EvidenceViewModel warnings:** 4 (Swift concurrency)
 - **InspectionViewModel warnings:** 1 (Swift concurrency)
+
+**See:** `warnings_before.txt` for full list
 
 ---
 
@@ -24,6 +26,10 @@
 - **Warnings:** 0 ✅
 - **"Update to recommended settings":** 0 ✅
 - **CI Pipeline:** ✅ Added
+- **Config Externalized:** ✅ xcconfig files
+- **Unified Logging:** ✅ os.Logger
+
+**See:** `warnings_after.txt` for verification
 
 ---
 
@@ -70,6 +76,44 @@ Added `.github/workflows/ios-build.yml`:
 - Test job: Unit tests on iPad Simulator
 - Caches DerivedData for faster builds
 - Uploads build/test logs as artifacts
+
+---
+
+## Config Externalization (chore(config))
+
+Added configuration management:
+- `ios/Config/Debug.xcconfig` - Development settings
+- `ios/Config/Release.xcconfig` - Production settings
+- `FieldInspector/Utilities/Config.swift` - Runtime config reader
+- Updated `Info.plist` with config keys
+
+**Config Keys:**
+| Key | Debug | Release |
+|-----|-------|--------|
+| API_BASE_URL | http://127.0.0.1:3000/api | https://api.deevo.io/v1 |
+| API_TIMEOUT_SECONDS | 30 | 60 |
+| ENABLE_DEBUG_LOGGING | YES | NO |
+| ENABLE_MOCK_DATA | NO | NO |
+
+**No secrets in code** - All sensitive values injected via build settings.
+
+---
+
+## Unified Logging (chore(logging))
+
+Added `AppLogger.swift` using Apple's `os.Logger`:
+- Structured logging with categories: sync, api, pdf, database, auth, ui, performance
+- Privacy-aware logging for Console.app
+- Signpost support for Instruments profiling
+- Replaced all `print()` statements in SyncService
+
+**Categories:**
+```swift
+AppLogger.sync    // Sync operations
+AppLogger.api     // Network requests
+AppLogger.pdf     // PDF generation
+AppLogger.database // DB operations
+```
 
 ---
 

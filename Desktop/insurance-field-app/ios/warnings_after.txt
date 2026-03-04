@@ -1,0 +1,52 @@
+# DeevoSentinel Build Warnings - AFTER Hardening
+# Date: March 4, 2026
+# Total: 0 warnings, 0 errors
+
+## Build Command
+xcodebuild build \
+  -project DeevoSentinel.xcodeproj \
+  -scheme DeevoSentinel \
+  -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M4),OS=latest' \
+  -configuration Debug
+
+## Result
+BUILD SUCCEEDED
+
+** BUILD SUCCEEDED **
+
+- Errors: 0
+- Warnings: 0
+- "Update to recommended settings": RESOLVED
+
+## Fixes Applied
+
+### Settings Issue
+- Applied Xcode recommended settings
+- Normalized iOS Deployment Target to 17.0
+- Set explicit Swift language version to 5.9
+
+### PDFService.swift (7 warnings fixed)
+- Removed unnecessary nil coalescing on UIColor(cgColor:) calls
+- Added nil coalescing for optional string interpolations
+- Changed 'var totalPages' to 'let totalPages'
+
+### PerformanceManager.swift (1 warning fixed)
+- Added @discardableResult or used _ = for unused result
+
+### SyncService.swift (4 warnings fixed)
+- Captured mutable variables as immutable 'let' before async closures
+- Used @MainActor for UI state updates
+
+### ClaimsViewModel.swift (2 warnings fixed)
+- Added @MainActor class annotation
+- Captured claimToSave as immutable before async closure
+
+### EvidenceViewModel.swift (4 warnings fixed)
+- Captured asset snapshots before database writes
+- Used immutable captures in async contexts
+
+### InspectionViewModel.swift (1 warning fixed)
+- Captured inspectionToSave as immutable before async closure
+
+---
+Verification: Clean build with 0 warnings confirmed

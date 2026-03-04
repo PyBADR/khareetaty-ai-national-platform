@@ -1,0 +1,27 @@
+//
+// Release.xcconfig
+// DeevoSentinel
+//
+// Release configuration for production builds
+//
+
+// MARK: - API Configuration
+// Production URL should be set via CI/CD environment variables
+// Default to empty to force configuration
+API_BASE_URL = https:/$()/api.deevo.io/v1
+API_TIMEOUT_SECONDS = 60
+
+// MARK: - Feature Flags
+ENABLE_DEBUG_LOGGING = NO
+ENABLE_MOCK_DATA = NO
+
+// MARK: - Build Settings
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited)
+SWIFT_OPTIMIZATION_LEVEL = -O
+ENABLE_TESTABILITY = NO
+
+// MARK: - Code Signing (Distribution)
+CODE_SIGN_IDENTITY = Apple Distribution
+CODE_SIGN_STYLE = Manual
+DEVELOPMENT_TEAM = 
+PROVISIONING_PROFILE_SPECIFIER = 
