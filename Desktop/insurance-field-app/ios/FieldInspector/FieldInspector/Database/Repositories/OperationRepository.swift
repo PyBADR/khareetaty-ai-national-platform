@@ -54,13 +54,14 @@ struct QueuedOperation: Identifiable, Codable, Equatable {
         self.processedAt = processedAt
     }
     
-    /// Generate a deterministic idempotency key
+    /// Generate a deterministic idempotency key (stable, no timestamp)
     static func generateIdempotencyKey(
         operationType: OperationType,
         entityType: String,
         entityId: String
     ) -> String {
-        let source = "\(operationType.rawValue):\(entityType):\(entityId):\(Date().timeIntervalSince1970)"
+        // Use stable hash without timestamp to ensure retry uses same key
+        let source = "\(operationType.rawValue):\(entityType):\(entityId)"
         return source.data(using: .utf8)?.base64EncodedString() ?? UUID().uuidString
     }
     
@@ -99,8 +100,7 @@ extension QueuedOperation: FetchableRecord, PersistableRecord {
 // MARK: - Operation Repository
 
 /// Repository for QueuedOperations - manages the offline operation queue
-@MainActor
-final class OperationRepository {
+final class OperationRepository: @unchecked Sendable {
     
     // MARK: - Singleton
     

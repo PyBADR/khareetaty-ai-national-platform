@@ -69,6 +69,8 @@ struct AuthToken: Codable {
 
 struct LoginResponse: Codable {
     let token: String
+    let refreshToken: String?
+    let expiresIn: Int?
     let user: User
     let tenant: Tenant?
 }

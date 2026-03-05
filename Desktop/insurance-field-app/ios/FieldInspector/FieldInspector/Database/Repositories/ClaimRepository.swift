@@ -2,8 +2,7 @@ import Foundation
 import GRDB
 
 /// Repository for Claim data access - isolates Views from direct GRDB queries
-@MainActor
-final class ClaimRepository {
+final class ClaimRepository: @unchecked Sendable {
     
     // MARK: - Singleton
     

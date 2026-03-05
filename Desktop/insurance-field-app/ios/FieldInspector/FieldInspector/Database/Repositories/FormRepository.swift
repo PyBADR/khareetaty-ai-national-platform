@@ -91,8 +91,7 @@ extension FormDraft: FetchableRecord, PersistableRecord {
 // MARK: - Form Repository
 
 /// Repository for Form Templates and Drafts - isolates Views from direct GRDB queries
-@MainActor
-final class FormRepository {
+final class FormRepository: @unchecked Sendable {
     
     // MARK: - Singleton
     

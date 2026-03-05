@@ -105,7 +105,7 @@ final class OperationProcessor: ObservableObject {
         isProcessing = false
     }
     
-    /// Process a single operation
+    /// Process a single operation with timeout
     private func processOperation(_ operation: QueuedOperation) async {
         AppLogger.sync.info("Processing operation: \(operation.id, privacy: .public) type: \(operation.operationType.rawValue, privacy: .public)")
         
@@ -113,20 +113,23 @@ final class OperationProcessor: ObservableObject {
             // Mark as processing
             try await operationRepository.markProcessing(id: operation.id)
             
-            // Execute the operation based on type
-            switch operation.operationType {
-            case .submitForm:
-                try await executeSubmitForm(operation)
-            case .uploadEvidence:
-                try await executeUploadEvidence(operation)
-            case .updateClaim:
-                try await executeUpdateClaim(operation)
-            case .createInspection:
-                try await executeCreateInspection(operation)
-            case .updateInspection:
-                try await executeUpdateInspection(operation)
-            case .deleteMedia:
-                try await executeDeleteMedia(operation)
+            // Execute the operation with 60s timeout
+            try await withTimeout(60) { [self] in
+                // Execute the operation based on type
+                switch operation.operationType {
+                case .submitForm:
+                    try await self.executeSubmitForm(operation)
+                case .uploadEvidence:
+                    try await self.executeUploadEvidence(operation)
+                case .updateClaim:
+                    try await self.executeUpdateClaim(operation)
+                case .createInspection:
+                    try await self.executeCreateInspection(operation)
+                case .updateInspection:
+                    try await self.executeUpdateInspection(operation)
+                case .deleteMedia:
+                    try await self.executeDeleteMedia(operation)
+                }
             }
             
             // Mark as completed

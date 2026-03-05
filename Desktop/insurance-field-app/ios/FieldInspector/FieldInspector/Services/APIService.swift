@@ -15,13 +15,12 @@ actor APIService {
     // MARK: - Properties
     
     private var baseURL: URL
-    private var authToken: String?
     private var currentTenantId: String?
     private let session: URLSession
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
-    private var isRefreshingToken = false
-    private var pendingRequests: [CheckedContinuation<Void, Never>] = []
+    private let authCoordinator: AuthRefreshCoordinator
+    private let keychainStore: KeychainStore
     
     // MARK: - Initialization
     
@@ -40,6 +39,13 @@ actor APIService {
         self.encoder = JSONEncoder()
         self.encoder.dateEncodingStrategy = .iso8601
         
+        // Initialize secure storage and auth coordinator
+        self.keychainStore = KeychainStore()
+        self.authCoordinator = AuthRefreshCoordinator(
+            keychainStore: keychainStore,
+            apiBaseURL: Config.apiBaseURL.absoluteString
+        )
+        
         let urlString = self.baseURL.absoluteString
         AppLogger.api.info("APIService initialized with base URL: \(urlString, privacy: .public)")
     }
@@ -50,8 +56,17 @@ actor APIService {
         self.baseURL = baseURL
     }
     
-    func setAuthToken(_ token: String?) {
-        self.authToken = token
+    func setAuthToken(_ token: String, refreshToken: String, expiresIn: Int) async throws {
+        let tokens = AuthTokens(
+            accessToken: token,
+            refreshToken: refreshToken,
+            expiresAt: Date().addingTimeInterval(TimeInterval(expiresIn))
+        )
+        try await authCoordinator.setTokens(tokens)
+    }
+    
+    func clearAuthToken() async throws {
+        try await authCoordinator.clearTokens()
     }
     
     func setTenantId(_ tenantId: String?) {
@@ -82,7 +97,8 @@ actor APIService {
         request.httpMethod = method
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        if let token = authToken {
+        // Get valid token from auth coordinator (handles refresh if needed)
+        if let token = try? await authCoordinator.validAccessToken() {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
@@ -102,8 +118,10 @@ actor APIService {
         case 401:
             // Try to refresh token once if enabled
             if retryOn401 {
-                let refreshed = await attemptTokenRefresh()
-                if refreshed {
+                // Force refresh and retry
+                _ = try? await authCoordinator.refreshIfNeeded()
+                let refreshed = try? await authCoordinator.validAccessToken()
+                if refreshed != nil {
                     // Retry the original request with new token (no more retries)
                     return try await self.request(
                         endpoint: endpoint,
@@ -135,74 +153,7 @@ actor APIService {
         }
     }
     
-    // MARK: - Token Refresh
-    
-    /// Attempt to refresh the access token using the refresh token
-    private func attemptTokenRefresh() async -> Bool {
-        // If already refreshing, wait for it to complete
-        if isRefreshingToken {
-            await withCheckedContinuation { continuation in
-                pendingRequests.append(continuation)
-            }
-            return authToken != nil
-        }
-        
-        isRefreshingToken = true
-        defer {
-            isRefreshingToken = false
-            // Resume all pending requests
-            for continuation in pendingRequests {
-                continuation.resume()
-            }
-            pendingRequests.removeAll()
-        }
-        
-        do {
-            let refreshResponse: TokenRefreshResponse = try await requestWithoutRetry(
-                endpoint: "auth/refresh",
-                method: "POST"
-            )
-            
-            // Update the auth token
-            self.authToken = refreshResponse.token
-            return true
-        } catch {
-            // Refresh failed - clear token
-            self.authToken = nil
-            return false
-        }
-    }
-    
-    /// Make a request without 401 retry (used for refresh endpoint)
-    private func requestWithoutRetry<T: Decodable>(
-        endpoint: String,
-        method: String = "GET",
-        body: Encodable? = nil
-    ) async throws -> T {
-        let url = baseURL.appendingPathComponent(endpoint)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = method
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // Include credentials for cookie-based refresh token
-        if let token = authToken {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        
-        if let body = body {
-            request.httpBody = try encoder.encode(body)
-        }
-        
-        let (data, response) = try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 else {
-            throw APIError.unauthorized
-        }
-        
-        return try decoder.decode(T.self, from: data)
-    }
+    // MARK: - Session Management
     
     /// Notify that the session has expired
     private func notifySessionExpired() async {
@@ -212,8 +163,8 @@ actor APIService {
     }
     
     /// Clear authentication state (call on logout)
-    func clearAuth() {
-        self.authToken = nil
+    func clearAuth() async throws {
+        try await clearAuthToken()
         self.currentTenantId = nil
     }
     
@@ -231,7 +182,11 @@ actor APIService {
             body: LoginRequest(email: email, password: password)
         )
         
-        setAuthToken(response.token)
+        try await setAuthToken(
+            response.token,
+            refreshToken: response.refreshToken ?? "",
+            expiresIn: response.expiresIn ?? 3600
+        )
         setTenantId(response.user.tenantId)
         return response
     }
@@ -359,7 +314,7 @@ actor APIService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         
-        if let token = authToken {
+        if let token = try? await authCoordinator.validAccessToken() {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         

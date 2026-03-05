@@ -171,12 +171,7 @@ struct LoginView: View {
                 let response = try await APIService.shared.login(email: email, password: password)
                 
                 await MainActor.run {
-                    appState.login(
-                        token: response.token,
-                        refreshToken: response.refreshToken ?? "",
-                        expiresIn: response.expiresIn ?? 3600,
-                        user: response.user
-                    )
+                    appState.login(token: response.token, user: response.user)
                     isLoading = false
                 }
             } catch {

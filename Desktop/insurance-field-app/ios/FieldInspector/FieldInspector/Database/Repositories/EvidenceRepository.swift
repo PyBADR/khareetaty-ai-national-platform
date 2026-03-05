@@ -2,8 +2,7 @@ import Foundation
 import GRDB
 
 /// Repository for MediaAsset (Evidence) data access - isolates Views from direct GRDB queries
-@MainActor
-final class EvidenceRepository {
+final class EvidenceRepository: @unchecked Sendable {
     
     // MARK: - Singleton
     

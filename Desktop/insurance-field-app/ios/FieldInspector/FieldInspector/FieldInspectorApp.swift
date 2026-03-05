@@ -62,22 +62,24 @@ class AppState: ObservableObject {
     
     init() {
         // Check for saved auth token
-        if let token = UserDefaults.standard.string(forKey: "authToken") {
+        if let token = UserDefaults.standard.string(forKey: "authToken"),
+           let refreshToken = UserDefaults.standard.string(forKey: "refreshToken") {
             self.authToken = token
             self.isAuthenticated = true
             Task {
-                await APIService.shared.setAuthToken(token)
+                try? await APIService.shared.setAuthToken(token, refreshToken: refreshToken, expiresIn: 3600)
             }
         }
     }
     
-    func login(token: String, user: User) {
+    func login(token: String, refreshToken: String, expiresIn: Int, user: User) {
         self.authToken = token
         self.currentUser = user
         self.isAuthenticated = true
         UserDefaults.standard.set(token, forKey: "authToken")
+        UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
         Task {
-            await APIService.shared.setAuthToken(token)
+            try? await APIService.shared.setAuthToken(token, refreshToken: refreshToken, expiresIn: expiresIn)
         }
     }
     
@@ -86,8 +88,9 @@ class AppState: ObservableObject {
         self.currentUser = nil
         self.isAuthenticated = false
         UserDefaults.standard.removeObject(forKey: "authToken")
+        UserDefaults.standard.removeObject(forKey: "refreshToken")
         Task {
-            await APIService.shared.setAuthToken(nil)
+            try? await APIService.shared.clearAuthToken()
         }
     }
 }

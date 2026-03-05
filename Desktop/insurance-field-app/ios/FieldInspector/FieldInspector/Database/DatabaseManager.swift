@@ -2,8 +2,7 @@ import Foundation
 import GRDB
 
 /// Manages the SQLite database using GRDB
-@MainActor
-final class DatabaseManager: Sendable {
+final class DatabaseManager: @unchecked Sendable {
     
     // MARK: - Singleton
     
